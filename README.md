@@ -6,7 +6,8 @@ You need to get your Reddit credentials from the [Old Reddit](https://old.reddit
 
 Export your reddit credentials provided by the Reddit API as environment variables.
 The command 
-'''shell
+
+'''shellscript
 python redditscrap.py python --limit 20
 '''
 will download the top 20 submissions in r/python of all time.
