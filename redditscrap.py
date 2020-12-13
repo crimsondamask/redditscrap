@@ -10,7 +10,7 @@ reddit = praw.Reddit(
         username=os.getenv('REDDIT_USER')
         )
 SUB = sys.argv[1]
-if sys.argv[2] == "--limit":
+if sys.argv[2] == "--limit" or sys.argv[2] =="-l":
     LIMIT = int(sys.argv[3])
     print("Will look for the top {} posts in the sub {}.".format(LIMIT, SUB))
 else:
