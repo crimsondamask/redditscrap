@@ -24,8 +24,15 @@ else:
     link_list = reddit.subreddit(SUB).top("all", limit=LIMIT)
     print("Looking for the top {} submissions of all time in the subreddit r/{}.".format(LIMIT, SUB))
 
+def progress(count, blockSize, totalSize):
+    percent = int(count * blockSize / totalSize * 100)
+    sys.stdout.write("Progress ====================> %d%%       \r" %percent)
+    sys.stdout.flush()
+
 def download(list):
     os.makedirs("/home/{}/Downloads/reddit/{}".format(os.getenv("USER"), SUB), exist_ok=True)
+    submission_count = 0
+    error_count = 0
     for submission in link_list:
         filename = submission.created_utc
         url = submission.url
@@ -38,12 +45,16 @@ def download(list):
                     'title': str(submission.title)
                     }
             with open("/home/{}/Downloads/reddit/{}/{}.json".format(os.getenv("USER"), SUB, filename), 'w') as js:
-                json.dump(metadata, js)
-            print("Downloading post =====> {} ======>{}".format(submission.name, url))
+                    json.dump(metadata, js)
             try:
+                print("\nDownloading submission {}  ".format(submission.name))
                 urllib.request.urlretrieve(url,
-                        "/home/{}/Downloads/reddit/{}/{}.{}".format(os.getenv("USER"), SUB, filename, ext)
+                        "/home/{}/Downloads/reddit/{}/{}.{}".format(os.getenv("USER"), SUB, filename, ext),
+                        reporthook=progress
                         )
+                submission_count += 1
             except:
+                error_count += 1
                 pass
+    print("{} submissions have been downloaded and {} sumissions have been excluded.   ".format(submission_count, error_count))
 download(link_list)
