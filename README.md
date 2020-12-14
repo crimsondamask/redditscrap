@@ -11,7 +11,17 @@ Simply log into reddit and press **preferences** **=>** **apps** which is locate
 You will then be redirected to the App menu. In the App type choose script, and in the redirect url put (https://localhost:8080). 
 You can put your app credentials in the script to authenticate it, or you can export them as environment variables which is more secure.
 
-```bash
-python redditscrap.py python -l 20
 ```
-This command will download the top 20 submissions in the subreddit r/python. 
+python redditscrap.py [subreddit name without "r/"] [options] [the number of submissions]
+```
+
+# Options
+
+```bash
+[-h]	Downloads any number of the hottest submissions
+[-t]	Downloads any number of the top submissions
+	[--all] [--year] [--month] [--week]
+```
+
+The command ```python redditscrap.py learnpython -t 20 --month```  will download the top 20 submissions of of the past month in the subreddit r/learnpython.
+While the command ```python redditscrap.py learnpython -h 10 will download the 10 hottest submissions in the subreddit r/learnpython```  

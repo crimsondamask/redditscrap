@@ -1,3 +1,4 @@
+#!/user/bin/python
 from dotenv import load_dotenv
 import os, urllib.request, sys, praw, json, datetime
 
@@ -10,13 +11,18 @@ reddit = praw.Reddit(
         username=os.getenv('REDDIT_USER')
         )
 SUB = sys.argv[1]
-if sys.argv[2] == "--limit" or sys.argv[2] =="-l":
-    LIMIT = int(sys.argv[3])
-    print("Will look for the top {} posts in the sub {}.".format(LIMIT, SUB))
+LIMIT = int(sys.argv[3])
+if sys.argv[2] == "-h":
+    link_list = reddit.subreddit(SUB).hot(limit=LIMIT)
+    print("Looking for the {} hot submissions in the subreddit r/{}.".format(LIMIT, SUB))
+elif sys.argv[2] == "-t" and sys.argv[4]:
+    #(--all) for all and (--month) for month...
+    top = sys.argv[4].split('--')[-1]
+    link_list = reddit.subreddit(SUB).top(str(top), limit=LIMIT)
+    print("Looking for the top {} submissions in the last {} in the subreddit r/{}.".format(LIMIT, top, SUB))
 else:
-    LIMIT = 10
-
-link_list = reddit.subreddit(SUB).top("all", limit=LIMIT)
+    link_list = reddit.subreddit(SUB).top("all", limit=LIMIT)
+    print("Looking for the top {} submissions of all time in the subreddit r/{}.".format(LIMIT, SUB))
 
 def download(list):
     os.makedirs("/home/{}/Downloads/reddit/{}".format(os.getenv("USER"), SUB), exist_ok=True)
